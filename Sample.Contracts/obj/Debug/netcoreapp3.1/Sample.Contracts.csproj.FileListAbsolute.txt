@@ -1,0 +1,9 @@
+E:\repos\Sample-Twitch\Sample.Contracts\bin\Debug\netcoreapp3.1\Sample.Contracts.deps.json
+E:\repos\Sample-Twitch\Sample.Contracts\bin\Debug\netcoreapp3.1\Sample.Contracts.dll
+E:\repos\Sample-Twitch\Sample.Contracts\bin\Debug\netcoreapp3.1\Sample.Contracts.pdb
+E:\repos\Sample-Twitch\Sample.Contracts\obj\Debug\netcoreapp3.1\Sample.Contracts.csproj.CoreCompileInputs.cache
+E:\repos\Sample-Twitch\Sample.Contracts\obj\Debug\netcoreapp3.1\Sample.Contracts.AssemblyInfoInputs.cache
+E:\repos\Sample-Twitch\Sample.Contracts\obj\Debug\netcoreapp3.1\Sample.Contracts.AssemblyInfo.cs
+E:\repos\Sample-Twitch\Sample.Contracts\obj\Debug\netcoreapp3.1\Sample.Contracts.dll
+E:\repos\Sample-Twitch\Sample.Contracts\obj\Debug\netcoreapp3.1\Sample.Contracts.pdb
+E:\repos\Sample-Twitch\Sample.Contracts\obj\Debug\netcoreapp3.1\Sample.Contracts.csprojAssemblyReference.cache
