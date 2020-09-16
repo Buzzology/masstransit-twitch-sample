@@ -24,12 +24,13 @@ namespace Sample.Api
         {
             services.AddControllers();
 
-            services.AddMediator(x =>
-            {
-                x.AddConsumersFromNamespaceContaining<SubmitOrderConsumer>();
-                x.AddRequestClient<SubmitOrder>();
+            services.AddMassTransit(cfg => {
+                cfg.AddConsumersFromNamespaceContaining<SubmitOrderConsumer>();
+                cfg.AddRequestClient<SubmitOrder>();
+                cfg.UsingRabbitMq();
             });
 
+            services.AddMassTransitHostedService();
             services.AddOpenApiDocument(cfg => cfg.PostProcess = d => d.Info.Title = "Sample API Site");
         }
 

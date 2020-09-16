@@ -1,0 +1,19 @@
+version: '3.4'
+
+services:  
+
+  rabbitmq:
+    container_name: twitch-rabbitmq
+    hostname: rabbitmq
+    image: rabbitmq:3-management
+    ports:
+    - "5672:5672"
+    - "15672:15672"
+
+    #sample.service:
+      # image: ${DOCKER_REGISTRY-}sampleservice
+      # build:
+      #   context: .
+      #   dockerfile: Sample.Service/Dockerfile
+
+    
