@@ -20,7 +20,9 @@ namespace Sample.Components.Consumers
 
             if (context.Message.CustomerNumber.Contains("TEST", System.StringComparison.OrdinalIgnoreCase))
             {
-                await context.RespondAsync<OrderSubmissionRejected>(
+                if(context.RequestId != null)
+                {
+                    await context.RespondAsync<OrderSubmissionRejected>(
                     new
                     {
                         InVar.Timestamp,
@@ -29,14 +31,19 @@ namespace Sample.Components.Consumers
                         Reason = $"Test customer cannot submit orders: {context.Message.CustomerNumber}"
                     });
 
-                return;
+                    return;
+                }
             }
 
-            await context.RespondAsync<OrderSubmissionAccepted>(new {
-                InVar.Timestamp,
-                OrderId = context.Message.OrderId,
-                CustomerNumber = context.Message.CustomerNumber,
-            });
+            if (context.RequestId != null)
+            {
+                await context.RespondAsync<OrderSubmissionAccepted>(new
+                {
+                    InVar.Timestamp,
+                    OrderId = context.Message.OrderId,
+                    CustomerNumber = context.Message.CustomerNumber,
+                });
+            }
         }
     }
 }
