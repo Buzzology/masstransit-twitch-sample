@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Sample.Contracts
 {
-    public interface SubmitOrder
+    public interface OrderSubmissionAccepted
     {
         Guid OrderId { get; }
 

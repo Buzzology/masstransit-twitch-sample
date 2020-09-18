@@ -13,23 +13,25 @@ namespace Sample.Api.Controllers
     {
         private readonly ILogger<OrdersController> _logger;
         private readonly IRequestClient<SubmitOrder> _submitOrderRequestClient;
+        private readonly IRequestClient<CheckOrder> _checkOrderRequestClient;
         private readonly ISendEndpointProvider _sendEndpointProvider;
 
         public OrdersController(
             ILogger<OrdersController> logger,
             IRequestClient<SubmitOrder> submitOrderRequestClient,
+            IRequestClient<CheckOrder> checkOrderRequestClient,
             ISendEndpointProvider sendEndpointProvider
             )
         {
             _logger = logger;
             _submitOrderRequestClient = submitOrderRequestClient;
+            _checkOrderRequestClient = checkOrderRequestClient;
             _sendEndpointProvider = sendEndpointProvider;
         }
 
         [HttpPost]
         public async Task<IActionResult> Post(Guid id, string customerNumber)
         {
-
             var (accepted, rejected) = await _submitOrderRequestClient.GetResponse<OrderSubmissionAccepted, OrderSubmissionRejected>(new
             {
                 OrderId = id,
@@ -47,6 +49,24 @@ namespace Sample.Api.Controllers
                 return BadRequest((await rejected).Message);
             }
         }
+
+
+        [HttpGet]
+        public async Task<IActionResult> Get(Guid id)
+        {
+            var (status, notFound) = await _checkOrderRequestClient.GetResponse<OrderStatus, OrderNotFound>(new
+            {
+                OrderId = id,
+            });
+
+            if (status.IsCompletedSuccessfully)
+            {
+                return Ok((await status).Message);
+            }
+
+            return NotFound((await notFound).Message);
+        }
+
 
         [HttpPut]
         public async Task<IActionResult> Put(Guid id, string customerNumber)

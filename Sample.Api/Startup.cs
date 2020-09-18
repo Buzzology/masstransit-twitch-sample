@@ -27,6 +27,7 @@ namespace Sample.Api
             services.AddMassTransit(cfg => {
                 cfg.AddConsumersFromNamespaceContaining<SubmitOrderConsumer>();
                 cfg.AddRequestClient<SubmitOrder>();
+                cfg.AddRequestClient<CheckOrder>();
                 cfg.UsingRabbitMq();
             });
 
