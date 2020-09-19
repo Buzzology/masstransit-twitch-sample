@@ -9,6 +9,10 @@ namespace Sample.Components.Consumers
     {
         readonly ILogger<SubmitOrderConsumer> _logger;
 
+        public SubmitOrderConsumer()
+        {
+        }
+
         public SubmitOrderConsumer(ILogger<SubmitOrderConsumer> logger)
         {
             _logger = logger;
@@ -16,7 +20,7 @@ namespace Sample.Components.Consumers
 
         public async Task Consume(ConsumeContext<SubmitOrder> context)
         {
-            _logger.Log(LogLevel.Debug, $"SubmitOrderConsumer: {context.Message.CustomerNumber}");
+            _logger?.Log(LogLevel.Debug, $"SubmitOrderConsumer: {context.Message.CustomerNumber}");
 
             if (context.Message.CustomerNumber.Contains("TEST", System.StringComparison.OrdinalIgnoreCase))
             {
