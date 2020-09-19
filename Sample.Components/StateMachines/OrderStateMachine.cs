@@ -1,7 +1,6 @@
 ﻿using Automatonymous;
 using MassTransit;
 using MassTransit.RedisIntegration;
-using MassTransit.Saga;
 using Sample.Contracts;
 using System;
 using System.Collections.Generic;
@@ -69,21 +68,5 @@ namespace Sample.Components.StateMachines
 
         public Event<OrderSubmitted> OrderSubmitted { get; private set; }
         public Event<CheckOrder> OrderStatusRequested { get; private set; }
-    }
-
-    
-    public class OrderState : SagaStateMachineInstance, ISagaVersion
-    {
-        public Guid CorrelationId { get; set; }
-
-        public string CurrentState { get; set; }
-
-        public string CustomerNumber { get; set; }
-
-        public DateTime? Updated { get; set; }
-
-        public DateTime? SubmitDate { get; set; }
-
-        public int Version { get; set; } // Versioned saga is required for redis and requires version property
     }
 }
