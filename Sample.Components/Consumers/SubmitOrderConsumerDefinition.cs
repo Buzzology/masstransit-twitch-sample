@@ -9,7 +9,7 @@ namespace Sample.Components.Consumers
     {
         protected override void ConfigureConsumer(IReceiveEndpointConfigurator endpointConfigurator, IConsumerConfigurator<SubmitOrderConsumer> consumerConfigurator)
         {
-            endpointConfigurator.UseMessageRetry(r => r.Interval(3, 1000));
+            endpointConfigurator.UseMessageRetry(r => r.Interval(2, 1000));
         }
     }
 }

@@ -13,7 +13,7 @@ namespace Sample.Components.StateMachines
 
         protected override void ConfigureSaga(IReceiveEndpointConfigurator endpointConfigurator, ISagaConfigurator<OrderState> sagaConfigurator)
         {
-            endpointConfigurator.UseMessageRetry(r => r.Intervals(500, 5000, 10000));
+            endpointConfigurator.UseMessageRetry(r => r.Intervals(500, 1000));
             endpointConfigurator.UseInMemoryOutbox();
         }
     }
