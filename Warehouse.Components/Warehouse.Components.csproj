@@ -7,11 +7,9 @@
   <ItemGroup>
     <PackageReference Include="MassTransit" Version="7.0.4" />
     <PackageReference Include="MassTransit.Analyzers" Version="7.0.4" />
-    <PackageReference Include="MassTransit.MongoDb" Version="7.0.4" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Sample.Contracts\Sample.Contracts.csproj" />
     <ProjectReference Include="..\Warehouse.Contracts\Warehouse.Contracts.csproj" />
   </ItemGroup>
 

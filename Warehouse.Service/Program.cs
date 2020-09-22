@@ -3,17 +3,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Sample.Components.Consumers;
-using Sample.Components.CourierActivities;
-using Sample.Components.StateMachines;
-using Sample.Components.StateMachines.OrderStateMachineActivity;
 using System;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
-using Warehouse.Contracts;
+using Warehouse.Components;
 
-namespace Sample.Service
+namespace Warehouse.Service
 {
     class Program
     {
@@ -31,19 +27,10 @@ namespace Sample.Service
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
-                    services.AddScoped<AcceptOrderActivity>();
                     services.AddMassTransit(cfg =>
                     {
-                        cfg.AddConsumersFromNamespaceContaining<SubmitOrderConsumer>();
-                        cfg.AddActivitiesFromNamespaceContaining<AllocateInventoryActivity>();
-                        cfg.AddSagaStateMachine<OrderStateMachine, OrderState>(typeof(OrderStateMachineDefinition))
-                            .MongoDbRepository(r =>
-                            {
-                                r.Connection = "mongodb://root:example@localhost:27017";
-                                r.DatabaseName = "orderdb";
-                            }); 
+                        cfg.AddConsumersFromNamespaceContaining<AllocateInventoryConsumer>();
                         cfg.AddBus(ConfigureBus);
-                        cfg.AddRequestClient<AllocateInventory>();
                     });
 
                     services.AddHostedService<MassTransitConsoleHostedService>();

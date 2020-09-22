@@ -171,13 +171,13 @@ namespace Sample.Components.Tests
 
                 Assert.That(response.Message.State, Is.EqualTo(orderStateMachine.Submitted.Name));
 
-                // Close customer account
+                // Accept the order
                 await harness.Bus.Publish<OrderAccepted>(new
                 {
                     OrderId = orderId,
                 });
 
-                // Wait for it to be marked as cancelled
+                // Wait for it to be marked as accepted
                 await saga.Exists(orderId, x => x.Accepted);
 
                 response = await requestClient.GetResponse<OrderStatus>(new { orderId });
