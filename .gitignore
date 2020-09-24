@@ -1,7 +1,9 @@
 appSettings.local.json
 appSettings.Development.json
+*appSettings.Development.json
 appSettings.local-test.json
 appSettings.*
+*docker-compose.override.yml
 
 
 ## Ignore Visual Studio temporary files, build results, and

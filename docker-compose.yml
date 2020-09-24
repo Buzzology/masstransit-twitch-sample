@@ -26,6 +26,21 @@ services:
       ME_CONFIG_MONGODB_ADMINUSERNAME: root
       ME_CONFIG_MONGODB_ADMINPASSWORD: example
 
+  sqlserver:
+    image: masstransit/sqlserver-quartz
+    ports:
+      - 1433:1433
+
+  quartz:
+    image: masstransit/quartz:latest
+    environment:
+      ApplicationInsights__InstrumentationKey: 'YOUR_KEY_HERE'
+      MT_Prometheus: 'quartz'
+      MT_Scheduler: 'quartz'
+      MT_Quartz__ConnectionString: 'Server=tcp:sqlserver;Database=quartznet;Persist Security Info=False;User ID=sa;Password=Quartz!DockerP4ss;Encrypt=False;TrustServerCertificate=True;'
+    ports:
+     - "5002:80"
+
   #sample.service:
       # image: ${DOCKER_REGISTRY-}sampleservice
       # build:

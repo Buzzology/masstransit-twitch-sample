@@ -1,4 +1,7 @@
 ﻿using MassTransit;
+using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DependencyCollector;
+using Microsoft.ApplicationInsights.Extensibility;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -17,6 +20,9 @@ namespace Sample.Service
 {
     class Program
     {
+        static TelemetryClient _telemetryClient;
+        static DependencyTrackingTelemetryModule _module;
+
         static async Task Main(string[] args)
         {
             var isService = !(Debugger.IsAttached || args.Contains("--console"));
@@ -31,6 +37,21 @@ namespace Sample.Service
                 })
                 .ConfigureServices((hostContext, services) =>
                 {
+                    #region Add telemetry
+
+                    _module = new DependencyTrackingTelemetryModule();
+                    _module.IncludeDiagnosticSourceActivities.Add("MassTransit");
+
+                    TelemetryConfiguration configuration = TelemetryConfiguration.CreateDefault();
+                    configuration.InstrumentationKey = hostContext.Configuration.GetSection("ApplicationInsights").GetValue<string>("InstrumentationKey");
+                    configuration.TelemetryInitializers.Add(new HttpDependenciesParsingTelemetryInitializer());
+
+                    _telemetryClient = new TelemetryClient(configuration);
+
+                    _module.Initialize(configuration);
+
+                    #endregion
+
                     services.AddScoped<AcceptOrderActivity>();
                     services.AddMassTransit(cfg =>
                     {
@@ -58,6 +79,9 @@ namespace Sample.Service
                 await builder.UseWindowsService().Build().RunAsync();
             else
                 await builder.RunConsoleAsync();
+
+            _telemetryClient?.Flush();
+            _module?.Dispose();
         }
 
         static IBusControl ConfigureBus(IBusRegistrationContext context)
