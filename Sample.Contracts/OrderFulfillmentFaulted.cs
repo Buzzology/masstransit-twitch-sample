@@ -4,10 +4,10 @@ using System.Text;
 
 namespace Sample.Contracts
 {
-    public interface FulfillOrder
+    public interface OrderFulfillmentFaulted
     {
         Guid OrderId { get; }
 
-        string CustomerNumber { get; }
+        DateTime Timestamp { get; }
     }
 }

@@ -51,6 +51,7 @@ namespace Sample.Components.CourierActivities
         }
     }
 
+
     public interface AllocateInventoryArguments
     {
         Guid OrderId { get; set; }

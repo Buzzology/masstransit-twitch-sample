@@ -7,6 +7,7 @@ using Microsoft.Extensions.Hosting;
 using Sample.Components.Consumers;
 using Sample.Contracts;
 using MassTransit.Mediator;
+using Microsoft.ApplicationInsights.DependencyCollector;
 
 namespace Sample.Api
 {
@@ -22,6 +23,12 @@ namespace Sample.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddApplicationInsightsTelemetry();
+            services.ConfigureTelemetryModule<DependencyTrackingTelemetryModule>((module, o) =>
+            {
+                module.IncludeDiagnosticSourceActivities.Add("MassTransit");
+            });
+
             services.AddControllers();
 
             services.AddMassTransit(cfg => {

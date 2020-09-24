@@ -29,13 +29,24 @@ namespace Warehouse.Components
                 When(AllocationCreated)
                     .Schedule(HoldExpiration, context => context.Init<AllocationHoldDurationExpired>(new { context.Data.AllocationId }),
                         context => context.Data.HoldDuration)
-                    .TransitionTo(Allocated)                        
+                    .TransitionTo(Allocated),
+
+                // If we receive the release requested before we've allocated we can transition to released immediated
+                When(ReleaseRequested)
+                    .TransitionTo(Released)
             );
 
             During(Allocated,
+                When(AllocationCreated)
+                    .Schedule(HoldExpiration, context => context.Init<AllocationHoldDurationExpired>(new { context.Data.AllocationId }),
+                        context => context.Data.HoldDuration),
                 When(HoldExpiration.Received)
-                .ThenAsync(context => Console.Out.WriteLineAsync($"Allocation Expired: {context.Data.AllocationId}"))
-                .Finalize()
+                    .ThenAsync(context => Console.Out.WriteLineAsync($"{Environment.NewLine}Allocation Expired: {context.Data.AllocationId}{Environment.NewLine}"))
+                    .Finalize(),
+                When(ReleaseRequested)
+                    .Unschedule(HoldExpiration)
+                    .ThenAsync(context => Console.Out.WriteLineAsync($"{Environment.NewLine}Allocation release request granted: {context.Data.AllocationId}{Environment.NewLine}"))
+                    .Finalize()
             );
 
             During(Released,

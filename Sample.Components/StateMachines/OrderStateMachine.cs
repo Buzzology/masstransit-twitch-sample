@@ -15,6 +15,7 @@ namespace Sample.Components.StateMachines
             // Use order id for correlation id
             Event(() => OrderSubmitted, x => x.CorrelateById(y => y.Message.OrderId));
             Event(() => OrderAccepted, x => x.CorrelateById(y => y.Message.OrderId));
+            Event(() => FulfillmentFaulted, x => x.CorrelateById(y => y.Message.OrderId));
             Event(() => OrderStatusRequested, x => {
                 x.CorrelateById(y => y.Message.OrderId);
                 x.OnMissingInstance(m => m.ExecuteAsync(async context =>
@@ -40,8 +41,13 @@ namespace Sample.Components.StateMachines
                     .TransitionTo(Submitted)                
                 );
 
-            // When an order is already submitted, ignore it
+            During(Accepted,
+                When(FulfillmentFaulted)
+                    .TransitionTo(Faulted)
+                );
+
             During(Submitted,
+                // When an order is already submitted, ignore it
                 Ignore(OrderSubmitted),
                 When(AccountClosed)
                     .TransitionTo(Cancelled),
@@ -75,10 +81,12 @@ namespace Sample.Components.StateMachines
         public State Submitted { get; private set; }
         public State Cancelled { get; private set; }
         public State Accepted { get; private set; }
+        public State Faulted { get; private set; }
 
         public Event<OrderSubmitted> OrderSubmitted { get; private set; }
         public Event<CheckOrder> OrderStatusRequested { get; private set; }
         public Event<CustomerAccountClosed> AccountClosed { get; private set; }
         public Event<OrderAccepted> OrderAccepted { get; private set; }
+        public Event<OrderFulfillmentFaulted> FulfillmentFaulted { get; private set; }
     }
 }

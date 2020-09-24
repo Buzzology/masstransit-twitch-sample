@@ -12,7 +12,7 @@ namespace Warehouse.Components
             await context.Publish<AllocationCreated>(new
             {
                 context.Message.AllocationId,
-                HoldDuration = 8000,
+                HoldDuration = 15000,
             });
 
             await context.RespondAsync<InventoryAllocated>(new
