@@ -12,6 +12,16 @@ namespace Sample.Components.Consumers
     {
         public async Task Consume(ConsumeContext<FulfillOrder> context)
         {
+            if (context.Message.CustomerNumber.StartsWith("INVALID"))
+            {
+                throw new InvalidOperationException($"We tried, but the customer is invalid.");
+            }
+
+            if (context.Message.CustomerNumber.StartsWith("MAYBE"))
+            {
+                if (new Random().Next(100) > 50) throw new ApplicationException("We randomly exploded, so sad, much tear.");
+            }
+
             var builder = new RoutingSlipBuilder(NewId.NextGuid());
 
             builder.AddActivity("AllocateInventory",

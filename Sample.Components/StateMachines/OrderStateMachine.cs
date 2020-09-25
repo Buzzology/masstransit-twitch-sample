@@ -4,6 +4,7 @@ using Sample.Components.StateMachines.OrderStateMachineActivity;
 using Sample.Contracts;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 
 namespace Sample.Components.StateMachines
@@ -17,6 +18,7 @@ namespace Sample.Components.StateMachines
             Event(() => OrderAccepted, x => x.CorrelateById(y => y.Message.OrderId));
             Event(() => FulfillmentFaulted, x => x.CorrelateById(y => y.Message.OrderId));
             Event(() => FulfillmentCompleted, x => x.CorrelateById(y => y.Message.OrderId));
+            Event(() => FulfillOrderFaulted, x => x.CorrelateById(y => y.Message.Message.OrderId));
             Event(() => OrderStatusRequested, x => {
                 x.CorrelateById(y => y.Message.OrderId);
                 x.OnMissingInstance(m => m.ExecuteAsync(async context =>
@@ -40,12 +42,15 @@ namespace Sample.Components.StateMachines
                         context.Instance.Updated = DateTime.UtcNow;
                         context.Instance.PaymentCardNumber = context.Data.PaymentCardNumber;
                     })
-                    .TransitionTo(Submitted)                
+                    .TransitionTo(Submitted)
                 );
 
             During(Accepted,
                 When(FulfillmentFaulted)
                     .TransitionTo(Faulted),
+                When(FulfillOrderFaulted)
+                    .TransitionTo(Faulted)
+                    .Then(context => Console.WriteLine($"Fullfill order faulted: ${context.Data.Message.OrderId} ${context.Data?.Exceptions?.FirstOrDefault()?.Message}")),
                 When(FulfillmentCompleted)
                     .TransitionTo(Completed)
                 );
@@ -95,5 +100,6 @@ namespace Sample.Components.StateMachines
         public Event<OrderAccepted> OrderAccepted { get; private set; }
         public Event<OrderFulfillmentFaulted> FulfillmentFaulted { get; private set; }
         public Event<OrderFulfillmentCompleted> FulfillmentCompleted { get; private set; }
+        public Event<Fault<FulfillOrder>> FulfillOrderFaulted {get; private set; }
     }
 }
