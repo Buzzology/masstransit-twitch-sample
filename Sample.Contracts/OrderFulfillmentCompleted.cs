@@ -1,15 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Sample.Contracts
 {
-    public interface SubmitOrder
+    public interface OrderFulfillmentFaulted
     {
         Guid OrderId { get; }
 
         DateTime Timestamp { get; }
-
-        string CustomerNumber { get; }
-
-        string PaymentCardNumber { get; }
     }
 }

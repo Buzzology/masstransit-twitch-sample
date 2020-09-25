@@ -24,7 +24,7 @@ namespace Sample.Api.Controllers
             await _publishEndpoint.Publish<CustomerAccountClosed>(new
             {
                 CustomerNumber = customerNumber,
-                customerId = id,
+                CustomerId = id,
             });
 
             return Ok();

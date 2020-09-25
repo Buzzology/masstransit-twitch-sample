@@ -24,11 +24,13 @@ namespace Sample.Components.StateMachines.OrderStateMachineActivity
         public async Task Execute(BehaviorContext<OrderState, OrderAccepted> context, Behavior<OrderState, OrderAccepted> next)
         {
             var consumeContext = context.GetPayload<ConsumeContext>();
-            var sendEndpoint = await consumeContext.GetSendEndpoint(new Uri("exchange:FulfillOrder"));
+            var sendEndpoint = await consumeContext.GetSendEndpoint(new Uri("queue:FulfillOrder"));
 
             await sendEndpoint.Send<FulfillOrder>(new
             {
                 context.Data.OrderId,
+                CustomerNumber = context.Instance.CustomerNumber,
+                PaymentCardNumber = context.Instance.PaymentCardNumber,
             });
 
             Console.WriteLine($"Hello, World. Order is ${context.Data.OrderId}.");

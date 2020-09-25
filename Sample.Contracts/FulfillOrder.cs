@@ -9,5 +9,7 @@ namespace Sample.Contracts
         Guid OrderId { get; }
 
         string CustomerNumber { get; }
+
+        string PaymentCardNumber { get; }
     }
 }

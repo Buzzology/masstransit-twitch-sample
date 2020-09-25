@@ -26,9 +26,10 @@ namespace Sample.Components.Tests
                 var requestClient = await harness.ConnectRequestClient<SubmitOrder>();
                 var response = await requestClient.GetResponse<OrderSubmissionAccepted>(new
                 {
-                    orderId,
+                    OrderId = orderId,
                     InVar.Timestamp,
-                    CustomerNumber = "12345"
+                    CustomerNumber = "12345",
+                    PaymentCardNumber = default(string)
                 });
 
                 Assert.That(response.Message.OrderId, Is.EqualTo(orderId));
@@ -56,7 +57,7 @@ namespace Sample.Components.Tests
                 var requestClient = await harness.ConnectRequestClient<SubmitOrder>();
                 var response = await requestClient.GetResponse<OrderSubmissionRejected>(new
                 {
-                    orderId,
+                    OrderId = orderId,
                     InVar.Timestamp,
                     CustomerNumber = "TEST12345"
                 });
@@ -146,7 +147,7 @@ namespace Sample.Components.Tests
                 var requestClient = await harness.ConnectRequestClient<SubmitOrder>();
                 await requestClient.GetResponse<OrderSubmissionRejected>(new
                 {
-                    orderId,
+                    OrderId = orderId,
                     InVar.Timestamp,
                     CustomerNumber = "TEST12345"
                 });

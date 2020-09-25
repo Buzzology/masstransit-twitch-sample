@@ -21,5 +21,7 @@ namespace Sample.Components.StateMachines
         public int Version { get; set; } // Versioned saga is required for redis and requires version property
 
         public string FaultReason { get; set; }
+
+        public string PaymentCardNumber { get; set; }
     }
 }

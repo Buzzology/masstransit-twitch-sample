@@ -33,14 +33,15 @@ namespace Sample.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Guid id, string customerNumber)
+        public async Task<IActionResult> Post(Guid id, string customerNumber, string paymentCardNumber)
         {
-            var (accepted, rejected) = await _submitOrderRequestClient.GetResponse<OrderSubmissionAccepted, OrderSubmissionRejected>(new
-            {
-                OrderId = id,
-                Timestmap = InVar.Timestamp,
-                CustomerNumber = customerNumber,
-            });
+            var (accepted, rejected) = await _submitOrderRequestClient.GetResponse<OrderSubmissionAccepted, OrderSubmissionRejected>(
+                new {
+                    OrderId = id,
+                    InVar.Timestamp,
+                    CustomerNumber = customerNumber,
+                    PaymentCardNumber = paymentCardNumber,
+                });
 
             if (accepted.IsCompletedSuccessfully)
             {
@@ -74,13 +75,14 @@ namespace Sample.Api.Controllers
         [HttpPut]
         public async Task<IActionResult> Put(Guid id, string customerNumber)
         {
-            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("exchange:submit-order"));
+            var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:submit-order"));
 
             await endpoint.Send<SubmitOrder>(new
             {
                 OrderId = id,
-                Timestmap = InVar.Timestamp,
                 CustomerNumber = customerNumber,
+                Timestamp = default(DateTime),
+                PaymentCardNumber = default(string)
             });
 
             return Accepted();
@@ -92,7 +94,7 @@ namespace Sample.Api.Controllers
         {
             await _publishEndpoint.Publish<OrderAccepted>(new
             {
-                orderId,
+                OrderId = orderId,
                 InVar.Timestamp,
             });
 

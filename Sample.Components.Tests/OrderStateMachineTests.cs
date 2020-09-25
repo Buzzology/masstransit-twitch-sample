@@ -80,7 +80,7 @@ namespace Sample.Components.Tests
                 Assert.That(instanceId, Is.Not.Null);
 
                 var requestClient = await harness.ConnectRequestClient<CheckOrder>();
-                var response = await requestClient.GetResponse<OrderStatus>(new { orderId });
+                var response = await requestClient.GetResponse<OrderStatus>(new { OrderId = orderId });
 
                 Assert.That(response.Message.State, Is.EqualTo(orderStateMachine.Submitted.Name));
             }
@@ -117,7 +117,7 @@ namespace Sample.Components.Tests
                 Assert.That(instanceId, Is.Not.Null);
 
                 var requestClient = await harness.ConnectRequestClient<CheckOrder>();
-                var response = await requestClient.GetResponse<OrderStatus>(new { orderId });
+                var response = await requestClient.GetResponse<OrderStatus>(new { OrderId = orderId });
 
                 Assert.That(response.Message.State, Is.EqualTo(orderStateMachine.Submitted.Name));
 
@@ -131,7 +131,7 @@ namespace Sample.Components.Tests
                 // Wait for it to be marked as cancelled
                 await saga.Exists(orderId, x => x.Cancelled);
 
-                response = await requestClient.GetResponse<OrderStatus>(new { orderId });
+                response = await requestClient.GetResponse<OrderStatus>(new { OrderId = orderId });
                 Assert.That(response.Message.State, Is.EqualTo(orderStateMachine.Cancelled.Name));
             }
             finally
@@ -167,7 +167,7 @@ namespace Sample.Components.Tests
                 Assert.That(instanceId, Is.Not.Null);
 
                 var requestClient = await harness.ConnectRequestClient<CheckOrder>();
-                var response = await requestClient.GetResponse<OrderStatus>(new { orderId });
+                var response = await requestClient.GetResponse<OrderStatus>(new { OrderId = orderId });
 
                 Assert.That(response.Message.State, Is.EqualTo(orderStateMachine.Submitted.Name));
 
@@ -180,7 +180,7 @@ namespace Sample.Components.Tests
                 // Wait for it to be marked as accepted
                 await saga.Exists(orderId, x => x.Accepted);
 
-                response = await requestClient.GetResponse<OrderStatus>(new { orderId });
+                response = await requestClient.GetResponse<OrderStatus>(new { OrderId = orderId });
                 Assert.That(response.Message.State, Is.EqualTo(orderStateMachine.Accepted.Name));
             }
             finally

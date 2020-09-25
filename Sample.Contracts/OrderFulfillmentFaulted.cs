@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Sample.Contracts
 {
-    public interface OrderFulfillmentFaulted
+    public interface OrderFulfillmentCompleted
     {
         Guid OrderId { get; }
 
