@@ -22,7 +22,7 @@ namespace Sample.Components.Consumers
         {
             _logger?.Log(LogLevel.Debug, $"SubmitOrderConsumer: {context.Message.CustomerNumber}");
 
-            if (context.Message.CustomerNumber.Contains("TEST", System.StringComparison.OrdinalIgnoreCase))
+            if (context.Message.CustomerNumber != null && context.Message.CustomerNumber.Contains("TEST", System.StringComparison.OrdinalIgnoreCase))
             {
                 if(context.RequestId != null)
                 {

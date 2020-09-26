@@ -6,6 +6,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Serilog;
 using System;
 using System.Diagnostics;
 using System.Linq;
@@ -22,6 +23,15 @@ namespace Warehouse.Service
         static async Task Main(string[] args)
         {
             var isService = !(Debugger.IsAttached || args.Contains("--console"));
+
+            // Add serilog
+            Log.Logger = new LoggerConfiguration()
+                .MinimumLevel.Debug()
+                .MinimumLevel.Override("Microsoft", Serilog.Events.LogEventLevel.Information)
+                .Enrich.FromLogContext()
+                .WriteTo.Console()
+                .CreateLogger();
+
             var builder = new HostBuilder()
                 .ConfigureAppConfiguration((hostingContext, config) =>
                 {
@@ -65,7 +75,7 @@ namespace Warehouse.Service
                 .ConfigureLogging((hostingContext, logging) =>
                 {
                     logging.AddConfiguration(hostingContext.Configuration.GetSection("logging"));
-                    logging.AddConsole();
+                    logging.AddSerilog(dispose: true);
                 });
 
             if (isService)

@@ -11,7 +11,6 @@ using System.Threading.Tasks;
 namespace Sample.Components.Consumers
 {
     public class RoutingSlipEventConsumer :
-        IConsumer<RoutingSlipCompleted>,
         IConsumer<RoutingSlipActivityCompleted>,
         IConsumer<RoutingSlipActivityFaulted>
     {
@@ -20,14 +19,6 @@ namespace Sample.Components.Consumers
         public RoutingSlipEventConsumer(ILogger<RoutingSlipEventConsumer> logger)
         {
             _logger = logger;
-        }
-
-        public Task Consume(ConsumeContext<RoutingSlipCompleted> context)
-        {
-            if (_logger.IsEnabled(Microsoft.Extensions.Logging.LogLevel.Information))
-                _logger.Log(Microsoft.Extensions.Logging.LogLevel.Information, $"Routing Slip Completed: {context.Message.TrackingNumber}");
-
-            return Task.CompletedTask;
         }
 
         public Task Consume(ConsumeContext<RoutingSlipActivityCompleted> context)

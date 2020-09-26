@@ -1,6 +1,7 @@
 ﻿using MassTransit;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Sample.Api.Models;
 using Sample.Contracts;
 using System;
 using System.Threading.Tasks;
@@ -33,14 +34,14 @@ namespace Sample.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Guid id, string customerNumber, string paymentCardNumber)
+        public async Task<IActionResult> Post(OrderViewModel model)
         {
             var (accepted, rejected) = await _submitOrderRequestClient.GetResponse<OrderSubmissionAccepted, OrderSubmissionRejected>(
                 new {
-                    OrderId = id,
+                    OrderId = model.Id,
                     InVar.Timestamp,
-                    CustomerNumber = customerNumber,
-                    PaymentCardNumber = paymentCardNumber,
+                    CustomerNumber = model.CustomerNumber,
+                    PaymentCardNumber = model.PaymentCardNumber,
                 });
 
             if (accepted.IsCompletedSuccessfully)
@@ -73,16 +74,16 @@ namespace Sample.Api.Controllers
 
 
         [HttpPut]
-        public async Task<IActionResult> Put(Guid id, string customerNumber)
+        public async Task<IActionResult> Put(OrderViewModel model)
         {
             var endpoint = await _sendEndpointProvider.GetSendEndpoint(new Uri("queue:submit-order"));
 
             await endpoint.Send<SubmitOrder>(new
             {
-                OrderId = id,
-                CustomerNumber = customerNumber,
+                OrderId = model.Id,
+                CustomerNumber = model.CustomerNumber,
                 Timestamp = default(DateTime),
-                PaymentCardNumber = default(string)
+                PaymentCardNumber = model.PaymentCardNumber,
             });
 
             return Accepted();
@@ -90,11 +91,11 @@ namespace Sample.Api.Controllers
 
 
         [HttpPatch]
-        public async Task<IActionResult> Patch(Guid orderId)
+        public async Task<IActionResult> Patch(Guid id)
         {
             await _publishEndpoint.Publish<OrderAccepted>(new
             {
-                OrderId = orderId,
+                OrderId = id,
                 InVar.Timestamp,
             });
 
