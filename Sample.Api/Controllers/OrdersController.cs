@@ -42,6 +42,7 @@ namespace Sample.Api.Controllers
                     InVar.Timestamp,
                     CustomerNumber = model.CustomerNumber,
                     PaymentCardNumber = model.PaymentCardNumber,
+                    Notes = model.Notes,
                 });
 
             if (accepted.IsCompletedSuccessfully)
@@ -84,6 +85,7 @@ namespace Sample.Api.Controllers
                 CustomerNumber = model.CustomerNumber,
                 Timestamp = default(DateTime),
                 PaymentCardNumber = model.PaymentCardNumber,
+                Notes = model.Notes,
             });
 
             return Accepted();

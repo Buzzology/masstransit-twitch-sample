@@ -8,6 +8,8 @@ using Sample.Components.Consumers;
 using Sample.Contracts;
 using MassTransit.Mediator;
 using Microsoft.ApplicationInsights.DependencyCollector;
+using MassTransit.MongoDbIntegration.MessageData;
+using System;
 
 namespace Sample.Api
 {
@@ -31,12 +33,17 @@ namespace Sample.Api
 
             services.AddControllers();
 
-            services.AddMassTransit(cfg => {
-                cfg.AddConsumer<SubmitOrderConsumer>(typeof(SubmitOrderConsumerDefinition));
-                cfg.AddConsumer<FulfillOrderConsumer>(typeof(FulfillOrderConsumerDefinition));
-                cfg.AddRequestClient<SubmitOrder>();
-                cfg.AddRequestClient<CheckOrder>();
-                cfg.UsingRabbitMq();
+            services.AddMassTransit(mt => {
+                mt.AddConsumer<SubmitOrderConsumer>(typeof(SubmitOrderConsumerDefinition));
+                mt.AddConsumer<FulfillOrderConsumer>(typeof(FulfillOrderConsumerDefinition));
+                mt.AddRequestClient<SubmitOrder>();
+                mt.AddRequestClient<CheckOrder>();
+                mt.UsingRabbitMq((context, cfg) =>
+                {
+                    MessageDataDefaults.ExtraTimeToLive = TimeSpan.FromDays(1);
+                    MessageDataDefaults.TimeToLive = TimeSpan.FromDays(7);
+                    cfg.UseMessageData(new MongoDbMessageDataRepository("mongodb://root:example@localhost:27017", "attachments"));
+                });
             });
 
             services.AddMassTransitHostedService();

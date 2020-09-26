@@ -8,6 +8,7 @@
     <PackageReference Include="MassTransit" Version="7.0.4" />
     <PackageReference Include="MassTransit.Analyzers" Version="7.0.4" />
     <PackageReference Include="MassTransit.AspNetCore" Version="7.0.4" />
+    <PackageReference Include="MassTransit.MongoDb" Version="7.0.4" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="7.0.4" />
     <PackageReference Include="Microsoft.ApplicationInsights.AspNetCore" Version="2.15.0" />
     <PackageReference Include="Microsoft.ApplicationInsights.DependencyCollector" Version="2.15.0" />

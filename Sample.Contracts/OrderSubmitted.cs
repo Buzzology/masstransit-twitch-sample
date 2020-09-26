@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MassTransit;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,5 +11,6 @@ namespace Sample.Contracts
         DateTime Timestamp { get; }
         string CustomerNumber { get; }
         string PaymentCardNumber { get; }
+        MessageData<string> Notes { get; }
     }
 }

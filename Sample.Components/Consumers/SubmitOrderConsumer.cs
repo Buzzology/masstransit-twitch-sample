@@ -39,12 +39,20 @@ namespace Sample.Components.Consumers
                 }
             }
 
+            var notes = context.Message.Notes;
+            if (notes.HasValue)
+            {
+                string notesValue = await notes.Value;
+                System.Console.WriteLine($"NOTES: {notesValue}");
+            }
+
             await context.Publish<OrderSubmitted>(new
             {
                 InVar.Timestamp,
                 OrderId = context.Message.OrderId,
                 CustomerNumber = context.Message.CustomerNumber,
                 PaymentCardNumber = context.Message.PaymentCardNumber,
+                Notes = context.Message.Notes
             });
 
             if (context.RequestId != null)

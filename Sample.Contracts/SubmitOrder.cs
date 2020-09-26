@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MassTransit;
+using System;
 
 namespace Sample.Contracts
 {
@@ -11,5 +12,7 @@ namespace Sample.Contracts
         string CustomerNumber { get; }
 
         string PaymentCardNumber { get; }
+
+        MessageData<string> Notes { get; }
     }
 }
