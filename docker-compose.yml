@@ -5,12 +5,14 @@ services:
   rabbitmq:
     container_name: twitch-rabbitmq
     hostname: rabbitmq
-    image: rabbitmq:3-management
+    #image: rabbitmq:3-management
+    image: heidiks/rabbitmq-delayed-message-exchange:latest
     ports:
     - "5672:5672"
     - "15672:15672"
 
   mongo:
+    hostname: mongo
     image: mongo
     ports:
      - 27017:27017
@@ -40,6 +42,24 @@ services:
       MT_Quartz__ConnectionString: 'Server=tcp:sqlserver;Database=quartznet;Persist Security Info=False;User ID=sa;Password=Quartz!DockerP4ss;Encrypt=False;TrustServerCertificate=True;'
     ports:
      - "5002:80"
+
+  warehouse:
+    image: twitch/warehouse:latest
+    environment:
+      ApplicationInsights__InstrumentationKey: 'YOUR_KEY_HERE'
+      MT_Prometheus: 'warehouse'
+      MT_Quartz: 'quartz'
+    ports:
+     - "5004:80"
+
+  sample:
+    image: twitch/sample:latest
+    environment:
+      ApplicationInsights__InstrumentationKey: 'YOUR_KEY_HERE'
+      MT_Prometheus: 'warehouse'
+      MT_Quartz: 'quartz'
+    ports:
+     - "5006:80"
 
   #sample.service:
       # image: ${DOCKER_REGISTRY-}sampleservice
