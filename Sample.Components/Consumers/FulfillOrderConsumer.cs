@@ -24,15 +24,15 @@ namespace Sample.Components.Consumers
 
             var builder = new RoutingSlipBuilder(NewId.NextGuid());
 
-            builder.AddActivity("AllocateInventory",
-                new Uri("queue:AllocateInventory_execute"),
+            builder.AddActivity("allocate-inventory",
+                new Uri("queue:allocate-inventory_execute"),
                 new
                 {
                     ItemNumber = "Item123",
                     Quantity = 10,
                 });
 
-            builder.AddActivity("PaymentActivity", new Uri("queue:Payment_execute"), new
+            builder.AddActivity("payment-activity", new Uri("queue:payment_execute"), new
             {
                 CardNumber = context.Message.PaymentCardNumber ?? "5999123456789",
                 Amount = 99.95M

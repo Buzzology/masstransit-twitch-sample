@@ -9,23 +9,20 @@ using Sample.Components.StateMachines;
 using Sample.Components.StateMachines.OrderStateMachineActivity;
 using System;
 using Warehouse.Contracts;
+using MassTransit.Platform.Abstractions;
 
 namespace Sample.Startup
 {
-    public class SampleStartupIPlatformStartup
+    public class SampleStartupIPlatformStartup : IPlatformStartup
     {
         public void ConfigureMassTransit(IServiceCollectionBusConfigurator cfg, IServiceCollection services)
         {
             // Manually added consumers, activities, etc. NOTE: Others will be added below via namespaces.
             services.AddScoped<AcceptOrderActivity>();
-            services.AddScoped<RoutingSlipBatchEventConsumer>();
             
             cfg.AddConsumersFromNamespaceContaining<SubmitOrderConsumer>();
             cfg.AddActivitiesFromNamespaceContaining<AllocateInventoryActivity>();
-            cfg.AddConsumer<RoutingSlipBatchEventConsumer>(x =>
-            {
-                x.Options<BatchOptions>(b => b.SetMessageLimit(10).SetTimeLimit(s: 1));
-            });
+            cfg.AddConsumersFromNamespaceContaining<RoutingSlipBatchEventConsumer>();
 
             cfg.AddSagaStateMachine<OrderStateMachine, OrderState>(typeof(OrderStateMachineDefinition))
                 .MongoDbRepository(r =>

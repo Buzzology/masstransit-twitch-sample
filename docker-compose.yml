@@ -3,13 +3,20 @@ version: '3.4'
 services:  
 
   rabbitmq:
-    container_name: twitch-rabbitmq
     hostname: rabbitmq
-    #image: rabbitmq:3-management
-    image: heidiks/rabbitmq-delayed-message-exchange:latest
+    image: masstransit/rabbitmq:latest
     ports:
-    - "5672:5672"
-    - "15672:15672"
+     - "5672:5672"
+     - "15672:15672"
+     - "15692:15692"
+    healthcheck:
+        timeout: 5s
+        interval: 5s
+        retries: 10
+        test:
+          - "CMD"
+          - "rabbitmqctl"
+          - "status" 
 
   mongo:
     hostname: mongo
@@ -51,15 +58,21 @@ services:
       MT_Quartz: 'quartz'
     ports:
      - "5004:80"
+    depends_on:
+     - rabbitmq
+     - quartz
 
   sample:
     image: twitch/sample:latest
     environment:
       ApplicationInsights__InstrumentationKey: 'YOUR_KEY_HERE'
-      MT_Prometheus: 'warehouse'
+      #MT_Prometheus: 'sample'
       MT_Quartz: 'quartz'
     ports:
      - "5006:80"
+    depends_on:
+    - rabbitmq
+    - quartz
 
   #sample.service:
       # image: ${DOCKER_REGISTRY-}sampleservice

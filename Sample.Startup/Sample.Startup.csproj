@@ -7,6 +7,7 @@
   <ItemGroup>
     <PackageReference Include="MassTransit.Extensions.DependencyInjection" Version="7.0.4" />
     <PackageReference Include="MassTransit.MongoDb" Version="7.0.4" />
+    <PackageReference Include="MassTransit.Platform.Abstractions" Version="7.0.4" />
   </ItemGroup>
 
   <ItemGroup>

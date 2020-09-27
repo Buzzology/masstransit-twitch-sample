@@ -24,7 +24,7 @@ namespace Sample.Components.StateMachines.OrderStateMachineActivity
         public async Task Execute(BehaviorContext<OrderState, OrderAccepted> context, Behavior<OrderState, OrderAccepted> next)
         {
             var consumeContext = context.GetPayload<ConsumeContext>();
-            var sendEndpoint = await consumeContext.GetSendEndpoint(new Uri("queue:FulfillOrder"));
+            var sendEndpoint = await consumeContext.GetSendEndpoint(new Uri("queue:fulfill-order"));
 
             await sendEndpoint.Send<FulfillOrder>(new
             {
